@@ -1,14 +1,28 @@
-import ckan.plugins as plugins
-import ckan.plugins.toolkit as toolkit
+import ckan.plugins as p
+import ckan.plugins.toolkit as tk
 
+from .helpers import _get_helpers
+from .validators import _get_validators
 
-class ResourceVisibilityPlugin(plugins.SingletonPlugin):
-    plugins.implements(plugins.IConfigurer)
+class ResourceVisibilityPlugin(p.SingletonPlugin):
+    p.implements(p.IConfigurer)
+    p.implements(p.ITemplateHelpers)
+    p.implements(p.IValidators)
 
     # IConfigurer
 
     def update_config(self, config_):
-        toolkit.add_template_directory(config_, 'templates')
-        toolkit.add_public_directory(config_, 'public')
-        toolkit.add_resource('fanstatic',
-            'resource_visibility')
+        tk.add_template_directory(config_, 'templates')
+        tk.add_public_directory(config_, 'public')
+        tk.add_resource('assets', 'resource_visibility')
+
+
+    # ITemplateHelpers
+
+    def get_helpers(self):
+        return _get_helpers()
+
+    # IValidators
+
+    def get_validators(self):
+        return _get_validators()

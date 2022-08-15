@@ -1,0 +1,14 @@
+# resource_visibility-js:
+#   filter: rjsmin
+#   output: ckanext-resource_visibility/%(version)s-resource_visibility.js
+#   contents:
+#     - js/resource_visibility.js
+#   extra:
+#     preload:
+#       - base/main
+
+# resource_visibility-css:
+#   filter: cssrewrite
+#   output: ckanext-resource_visibility/%(version)s-resource_visibility.css
+#   contents:
+#     - css/resource_visibility.css

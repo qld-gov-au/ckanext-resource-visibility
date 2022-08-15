@@ -45,7 +45,6 @@ def request_privacy_assessment(value):
     """
     Set to default value if missing
     """
-    import ipdb; ipdb.set_trace()
     return validate_value(value, "", ["YES", "NO"],
                           "request privacy assessment")
 
@@ -58,6 +57,3 @@ def validate_value(value, default_value, valid_values, field):
             tk._("Invalid {field} value. It must be {valid_values}.".format(
                 field=field, valid_values=" or ".join(valid_values))))
     return value
-
-def set_default(value):
-    import ipdb; ipdb.set_trace()

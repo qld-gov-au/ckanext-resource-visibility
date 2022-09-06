@@ -7,16 +7,22 @@ import ckan.model as model
 
 from ckanext.data_qld import (
     helpers as data_qld_helpers,
-    auth_functions as data_qld_auth
+    auth_functions as data_qld_auth,
 )
 
+import ckanext.resource_visibility.constants as const
 
 log = logging.getLogger(__name__)
 
 
 def _get_helpers():
-    helpers_func = (get_package_dict, get_select_field_options,
-                    has_user_permission_for_org, process_resources)
+    helpers_func = (
+        get_package_dict,
+        get_select_field_options,
+        has_user_permission_for_org,
+        process_resources,
+        get_assessment_result_help_url,
+    )
 
     return {
         "resource_visibility_{}".format(func.__name__): func
@@ -29,7 +35,7 @@ def get_package_dict(id, use_get_action=True):
     Return package dict.
     """
     if len(id) == 0:
-        id = data_qld_helpers.get_request_path().split('/')[-1]
+        id = tk.request.view_args.get('id')
 
     try:
         if use_get_action:
@@ -57,7 +63,6 @@ def get_select_field_options(field_name, field_schema='resource_fields'):
         if field.get('field_name') == field_name and field.get(
                 'choices', None):
             return tk.h.scheming_field_choices(field)
-
 
 
 def has_user_permission_for_org(org_id, user_obj, permission):
@@ -108,3 +113,7 @@ def process_resources(data_dict, user_obj):
             for resource in resources:
                 resource.pop('resource_visible', None)
                 resource.pop('governance_acknowledgement', None)
+
+
+def get_assessment_result_help_url():
+    return tk.config.get(const.PRIVACY_ASSESS_RESULT_LINK)

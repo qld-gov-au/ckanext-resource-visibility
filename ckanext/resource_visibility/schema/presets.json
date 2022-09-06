@@ -86,6 +86,16 @@
                 ],
                 "help_text": "Where the dataset contains de-identified data, selecting ‘YES’ will hide this resource, pending a privacy assessment. Assessments will not be completed where the dataset does not contain de-identified data. Select ‘NO’ where the dataset does not contain de-identified data or where a privacy assessment is not required."
             }
+        },
+        {
+            "preset_name": "resource_visibility_privacy_assessment_result",
+            "values": {
+                "field_name": "privacy_assessment_result",
+                "label": "Privacy assessment result",
+                "validators": "ignore_missing resource_visibility_privacy_assessment_result",
+                "form_snippet": "privacy_assessment_result.html",
+                "display_snippet": "text.html"
+            }
         }
     ]
 }

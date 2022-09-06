@@ -1,6 +1,9 @@
 # encoding: utf-8
 
 import ckan.plugins.toolkit as tk
+import ckan.authz as authz
+
+import ckanext.resource_visibility.constants as const
 
 
 def _get_validators():
@@ -8,7 +11,8 @@ def _get_validators():
         resource_visible,
         governance_acknowledgement,
         de_identified_data,
-        request_privacy_assessment
+        request_privacy_assessment,
+        privacy_assessment_result
     )
 
     return {
@@ -57,3 +61,33 @@ def validate_value(value, default_value, valid_values, field):
             tk._("Invalid {field} value. It must be {valid_values}.".format(
                 field=field, valid_values=" or ".join(valid_values))))
     return value
+
+
+def privacy_assessment_result(key, data, errors, context):
+    # no data - no problem
+    if not data[key]:
+        return
+
+    if len(key) != 3 or key[2] != const.FIELD_PRIVACY_ASSESS_RESULT:
+        return
+
+    model = context['model']
+    session = context['session']
+    resource_id = data.get((u'resources', key[1], 'id'))
+
+    # if there's no resource ID, it's a resource creation stage
+    if resource_id:
+        # if data hasn't change - do not validate
+        resource = session.query(model.Resource).get(resource_id)
+        if resource and resource.extras.get(const.FIELD_PRIVACY_ASSESS_RESULT) == data[key]:
+            return
+
+    if "ignore_auth" in context:
+        return
+
+    user = context.get('user')
+    if user and authz.is_sysadmin(context.get('user')):
+        return
+
+    errors[key].append(tk._('You are not allowed to edit this field.'))
+    raise tk.StopOnError()

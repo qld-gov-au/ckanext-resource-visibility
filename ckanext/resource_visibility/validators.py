@@ -12,7 +12,7 @@ def _get_validators():
         governance_acknowledgement,
         de_identified_data,
         request_privacy_assessment,
-        privacy_assessment_result
+        privacy_assessment_result,
     )
 
     return {
@@ -64,7 +64,7 @@ def validate_value(value, default_value, valid_values, field):
 
 
 def privacy_assessment_result(key, data, errors, context):
-    if len(key) != 3 or key[2] != const.FIELD_PRIVACY_ASSESS_RESULT:
+    if len(key) != 3 or key[2] != const.FIELD_ASSESS_RESULT:
         return
 
     model = context['model']
@@ -75,7 +75,15 @@ def privacy_assessment_result(key, data, errors, context):
     if resource_id:
         # if data hasn't change - do not validate
         resource = session.query(model.Resource).get(resource_id)
-        if resource and resource.extras.get(const.FIELD_PRIVACY_ASSESS_RESULT) == data[key]:
+
+        if not resource:
+            return
+
+        assesment_result = resource.extras.get(const.FIELD_ASSESS_RESULT)
+
+        if (assesment_result
+                and assesment_result == data[key]) or (not assesment_result
+                                                       and not data[key]):
             return
 
     if "ignore_auth" in context:

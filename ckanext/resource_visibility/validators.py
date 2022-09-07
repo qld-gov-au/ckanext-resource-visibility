@@ -64,10 +64,6 @@ def validate_value(value, default_value, valid_values, field):
 
 
 def privacy_assessment_result(key, data, errors, context):
-    # no data - no problem
-    if not data[key]:
-        return
-
     if len(key) != 3 or key[2] != const.FIELD_PRIVACY_ASSESS_RESULT:
         return
 

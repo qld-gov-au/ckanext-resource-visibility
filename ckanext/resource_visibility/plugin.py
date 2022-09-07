@@ -3,14 +3,14 @@ import ckan.plugins.toolkit as tk
 
 from .helpers import _get_helpers
 from .validators import _get_validators
-from .utils import hide_restricted_fields
+from .logic.action import _get_actions
 
 
 class ResourceVisibilityPlugin(p.SingletonPlugin):
     p.implements(p.IConfigurer)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IValidators)
-    p.implements(p.IResourceController, inherit=True)
+    p.implements(p.IActions)
 
     # IConfigurer
 
@@ -29,7 +29,7 @@ class ResourceVisibilityPlugin(p.SingletonPlugin):
     def get_validators(self):
         return _get_validators()
 
-    # IResourceController
+    # IActions
 
-    def before_show(self, resource_dict):
-        hide_restricted_fields(resource_dict)
+    def get_actions(self):
+        return _get_actions()

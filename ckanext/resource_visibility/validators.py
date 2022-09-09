@@ -71,7 +71,6 @@ def privacy_assessment_result(key, data, errors, context):
     session = context['session']
     resource_id = data.get((u'resources', key[1], 'id'))
 
-    # if there's no resource ID, it's a resource creation stage
     if resource_id:
         # if data hasn't change - do not validate
         resource = session.query(model.Resource).get(resource_id)
@@ -85,6 +84,10 @@ def privacy_assessment_result(key, data, errors, context):
                 and assesment_result == data[key]) or (not assesment_result
                                                        and not data[key]):
             return
+
+    # if there's no resource ID, it's a resource creation stage
+    if not resource_id and not data[key]:
+        return
 
     if "ignore_auth" in context:
         return

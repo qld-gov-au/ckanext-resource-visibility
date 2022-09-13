@@ -89,7 +89,7 @@ def privacy_assessment_result(key, data, errors, context):
     if not resource_id and not data[key]:
         return
 
-    if "ignore_auth" in context:
+    if context.get("ignore_auth"):
         return
 
     user = context.get('user')

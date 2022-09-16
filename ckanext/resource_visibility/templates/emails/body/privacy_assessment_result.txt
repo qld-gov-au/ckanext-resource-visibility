@@ -1,0 +1,11 @@
+A privacy risk assessment was requested for a resource. The result of that assessment has been published to {{ site_title }}.
+
+Resource/s:
+
+{% for res in resources %}
+    {{ res.url }}: {{ res.privacy_assessment_result }}
+{% endfor %}
+
+Refer to ‘https://www.data.qld.gov.au/article/standards-and-guidance/publishing-guides-standards/open-data-portal-publishing-guide’ for assistance or contact opendata@qld.gov.au.
+
+Do not reply to this email.

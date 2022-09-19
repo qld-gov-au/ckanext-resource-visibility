@@ -6,7 +6,6 @@ import logging
 from datetime import datetime as dt
 
 import ckan.plugins.toolkit as tk
-from ckan.lib.base import render_jinja2
 from ckan.lib.mailer import mail_recipient, MailerException
 
 import ckanext.resource_visibility.constants as const
@@ -121,7 +120,7 @@ def update_task(context, data_dict):
 
 
 def send_notifications(email, resources):
-    subject = render_jinja2('emails/subject/privacy_assessment_result.txt', {})
+    subject = tk.render('emails/subject/privacy_assessment_result.txt', {})
     body = _prepary_email_body(resources)
 
     try:
@@ -136,5 +135,5 @@ def _prepary_email_body(resources):
         'resources': resources
     }
 
-    return render_jinja2('emails/body/privacy_assessment_result.txt',
+    return tk.render('emails/body/privacy_assessment_result.txt',
                          extra_vars)

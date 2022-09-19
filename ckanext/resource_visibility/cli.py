@@ -13,7 +13,8 @@ def resource_visibility():
 
 
 @resource_visibility.command()
-def notify_privacy_assessments():
+@click.pass_context
+def notify_privacy_assessments(ctx):
     """Check for updated privacy_assessment_results"""
     data = utils.get_updated_privacy_assessment_result()
 
@@ -23,7 +24,8 @@ def notify_privacy_assessments():
     click.secho('Sending updated privacy_assessment_result to maintainers')
 
     for maintainer_email, updated_data in data.items():
-        utils.send_notifications(maintainer_email, updated_data.values())
+        with ctx.meta['flask_app'].test_request_context():
+            utils.send_notifications(maintainer_email, updated_data.values())
         utils._clear_upd_assessment_result_data()
 
     click.secho('Done', fg='green')

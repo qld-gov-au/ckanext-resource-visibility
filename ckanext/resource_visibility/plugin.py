@@ -45,13 +45,6 @@ class ResourceVisibilityPlugin(p.SingletonPlugin):
         return _get_commands()
 
     # IResourceController
-
-    def after_create(self, context, resource):
-        assessment_result = resource.get(const.FIELD_ASSESS_RESULT)
-
-        if assessment_result:
-            utils.save_updated_privacy_assessment_result(resource)
-
     def before_update(self, context, current_resource, updated_resource):
         old_assessment_result = current_resource.get(const.FIELD_ASSESS_RESULT)
         new_assessment_result = updated_resource.get(const.FIELD_ASSESS_RESULT)

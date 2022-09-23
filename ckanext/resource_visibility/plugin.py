@@ -1,20 +1,18 @@
 import ckan.plugins as p
 import ckan.plugins.toolkit as tk
 
-import ckanext.resource_visibility.constants as const
-import ckanext.resource_visibility.utils as utils
-from ckanext.resource_visibility.helpers import _get_helpers
-from ckanext.resource_visibility.validators import _get_validators
-from ckanext.resource_visibility.logic.action import _get_actions
-from ckanext.resource_visibility.cli import _get_commands
-
+from . import constants as const, cli, utils, helpers, validators
+from .logic import action
 
 class ResourceVisibilityPlugin(p.SingletonPlugin):
+
     p.implements(p.IConfigurer)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IValidators)
     p.implements(p.IActions)
-    p.implements(p.IClick)
+    # Ensure 2.8 does not crash, just disable cli options
+    if helpers.is_ckan_29():
+        p.implements(p.IClick)
     p.implements(p.IResourceController, inherit=True)
 
     # IConfigurer
@@ -27,24 +25,25 @@ class ResourceVisibilityPlugin(p.SingletonPlugin):
     # ITemplateHelpers
 
     def get_helpers(self):
-        return _get_helpers()
+        return helpers._get_helpers()
 
     # IValidators
 
     def get_validators(self):
-        return _get_validators()
+        return validators._get_validators()
 
     # IActions
 
     def get_actions(self):
-        return _get_actions()
+        return action._get_actions()
 
     # IClick
 
     def get_commands(self):
-        return _get_commands()
+        return cli._get_commands()
 
     # IResourceController
+
     def before_update(self, context, current_resource, updated_resource):
         old_assessment_result = current_resource.get(const.FIELD_ASSESS_RESULT)
         new_assessment_result = updated_resource.get(const.FIELD_ASSESS_RESULT)

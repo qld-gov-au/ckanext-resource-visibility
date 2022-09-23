@@ -8,8 +8,8 @@ from datetime import datetime as dt
 import ckan.plugins.toolkit as tk
 from ckan.lib.mailer import mail_recipient, MailerException
 
-import ckanext.resource_visibility.constants as const
-from ckanext.resource_visibility.helpers import has_user_permission_for_org
+from . import constants as const
+from .helpers import has_user_permission_for_org
 
 logger = logging.getLogger(__name__)
 

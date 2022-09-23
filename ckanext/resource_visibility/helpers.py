@@ -5,12 +5,7 @@ import logging
 import ckan.plugins.toolkit as tk
 import ckan.model as model
 
-from ckanext.data_qld import (
-    helpers as data_qld_helpers,
-    auth_functions as data_qld_auth,
-)
-
-import ckanext.resource_visibility.constants as const
+from . import auth_functions, constants as const
 
 log = logging.getLogger(__name__)
 
@@ -21,6 +16,7 @@ def _get_helpers():
         get_select_field_options,
         has_user_permission_for_org,
         get_assessment_result_help_url,
+        is_ckan_29
     )
 
     return {
@@ -73,10 +69,18 @@ def has_user_permission_for_org(org_id, user_obj, permission):
 
     context = {'user': user_obj.name}
     data_dict = {'org_id': org_id, 'permission': permission}
-    result = data_qld_auth.has_user_permission_for_org(context, data_dict)
+    result = auth_functions.has_user_permission_for_org(context, data_dict)
 
     return result and result.get('success')
 
 
 def get_assessment_result_help_url():
     return tk.config.get(const.PRIVACY_ASSESS_RESULT_LINK)
+
+
+def is_ckan_29():
+    """
+    Returns True if using CKAN 2.9+, with Flask and Webassets.
+    Returns False if those are not present.
+    """
+    return tk.check_ckan_version(min_version='2.9.0')

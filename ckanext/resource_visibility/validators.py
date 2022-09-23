@@ -3,7 +3,7 @@
 import ckan.plugins.toolkit as tk
 import ckan.authz as authz
 
-import ckanext.resource_visibility.constants as const
+from . import constants as const
 
 
 def _get_validators():

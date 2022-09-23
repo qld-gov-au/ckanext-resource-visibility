@@ -1,6 +1,6 @@
 import click
 
-import ckanext.resource_visibility.utils as utils
+from . import utils
 
 
 def _get_commands():

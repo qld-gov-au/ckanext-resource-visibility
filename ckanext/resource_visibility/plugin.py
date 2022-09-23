@@ -48,5 +48,5 @@ class ResourceVisibilityPlugin(p.SingletonPlugin):
         old_assessment_result = current_resource.get(const.FIELD_ASSESS_RESULT)
         new_assessment_result = updated_resource.get(const.FIELD_ASSESS_RESULT)
 
-        if old_assessment_result != new_assessment_result:
+        if new_assessment_result and old_assessment_result != new_assessment_result:
             utils.save_updated_privacy_assessment_result(updated_resource)

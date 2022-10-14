@@ -15,7 +15,11 @@ logger = logging.getLogger(__name__)
 
 
 def user_is_editor_or_admin(context, data_dict):
-    org_id = data_dict['owner_org']
+    org_id = data_dict.get('owner_org')
+
+    if not org_id:
+        return True
+
     user = context['auth_user_obj']
     return has_user_permission_for_org(org_id, user, 'create_dataset')
 

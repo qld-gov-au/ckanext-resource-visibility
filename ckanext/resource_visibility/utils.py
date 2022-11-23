@@ -135,7 +135,6 @@ def send_notifications(email, resources):
 
 def _prepary_email_body(resources):
     extra_vars = {
-        'site_title': 'Home | Queensland Government',
         'resources': resources
     }
 

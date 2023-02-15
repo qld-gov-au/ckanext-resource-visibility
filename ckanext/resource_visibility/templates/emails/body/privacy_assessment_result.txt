@@ -1,4 +1,4 @@
-A privacy risk assessment was requested for a resource. The result of that assessment has been published to {{ site_title }}.
+A privacy risk assessment was requested for a resource. The result of that assessment has been published to data.qld.gov.au.
 
 Resource/s:
 

@@ -60,14 +60,14 @@ def get_select_field_options(field_name, field_schema='resource_fields'):
             return tk.h.scheming_field_choices(field)
 
 
-def has_user_permission_for_org(org_id, user_obj, permission):
+def has_user_permission_for_org(org_id, user, permission):
     """
     Return False if user doesn't have permission in the organization.
     """
-    if user_obj is None:
+    if user is None:
         return False
 
-    context = {'user': user_obj.name}
+    context = {'user': user}
     data_dict = {'org_id': org_id, 'permission': permission}
     result = auth_functions.has_user_permission_for_org(context, data_dict)
 

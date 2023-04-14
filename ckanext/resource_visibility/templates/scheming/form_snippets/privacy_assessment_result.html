@@ -8,7 +8,7 @@
     {% set attrs = {"class": "form-control"} %}
 {% endif %}
 
-{% set user_allowed_to_edit = h.resource_visibility_has_user_permission_for_org(pkg_dict['owner_org'], g.userobj, 'create_dataset') %}
+{% set user_allowed_to_edit = h.resource_visibility_has_user_permission_for_org(pkg_dict['owner_org'], g.user, 'create_dataset') %}
 
 {% if user_allowed_to_edit %}
     {% call form.input(

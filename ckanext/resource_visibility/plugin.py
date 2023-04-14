@@ -4,6 +4,7 @@ import ckan.plugins.toolkit as tk
 from . import constants as const, cli, utils, helpers, validators
 from .logic import action
 
+
 class ResourceVisibilityPlugin(p.SingletonPlugin):
 
     p.implements(p.IConfigurer)

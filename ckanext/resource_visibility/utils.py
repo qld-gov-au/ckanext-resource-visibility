@@ -138,5 +138,4 @@ def _prepary_email_body(resources):
         'resources': resources
     }
 
-    return tk.render('emails/body/privacy_assessment_result.txt',
-                         extra_vars)
+    return tk.render('emails/body/privacy_assessment_result.txt', extra_vars)

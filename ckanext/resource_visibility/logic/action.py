@@ -3,6 +3,7 @@ import ckan.plugins.toolkit as tk
 import ckanext.resource_visibility.constants as c
 from ckanext.resource_visibility.utils import user_is_editor_or_admin
 
+
 def _get_actions():
     return {
         "package_show": package_show,

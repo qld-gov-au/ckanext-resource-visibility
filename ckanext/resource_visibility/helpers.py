@@ -64,7 +64,7 @@ def has_user_permission_for_org(org_id, user_obj, permission):
     """
     Return False if user doesn't have permission in the organization.
     """
-    if user_obj is None:
+    if not user_obj:
         return False
 
     context = {'user': user_obj.name}

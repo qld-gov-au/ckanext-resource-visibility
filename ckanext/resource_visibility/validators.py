@@ -80,9 +80,8 @@ def privacy_assessment_result(key, data, errors, context):
 
         assessment_result = resource.extras.get(const.FIELD_ASSESS_RESULT)
 
-        if (assessment_result
-                and assessment_result == data[key]) or (not assessment_result
-                                                       and not data[key]):
+        if (assessment_result and assessment_result == data[key])\
+                or (not assessment_result and not data[key]):
             return
 
     # if there's no resource ID, it's a resource creation stage

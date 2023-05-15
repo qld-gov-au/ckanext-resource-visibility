@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 import ckan.plugins as p
 import ckan.plugins.toolkit as tk
 
@@ -11,9 +13,7 @@ class ResourceVisibilityPlugin(p.SingletonPlugin):
     p.implements(p.ITemplateHelpers)
     p.implements(p.IValidators)
     p.implements(p.IActions)
-    # Ensure 2.8 does not crash, just disable cli options
-    if helpers.is_ckan_29():
-        p.implements(p.IClick)
+    p.implements(p.IClick)
     p.implements(p.IResourceController, inherit=True)
 
     # IConfigurer

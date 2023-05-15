@@ -28,7 +28,7 @@ jobs:
     needs: lint
     strategy:
       matrix:
-        ckan-version: ["2.10", 2.9, 2.9-py2, 2.8]
+        ckan-version: ["2.10", 2.9, 2.9-py2]
       fail-fast: false
 
     name: CKAN ${{ matrix.ckan-version }}
@@ -76,14 +76,8 @@ jobs:
           # Replace default path to CKAN core config file with the one on the container
           sed -i -e 's/use = config:.*/use = config:\/srv\/app\/src\/ckan\/test-core.ini/' test.ini
 
-      - name: Setup extension (CKAN >= 2.9)
-        if: ${{ matrix.ckan-version != '2.7' && matrix.ckan-version != '2.8' }}
-        run: |
-          ckan -c test.ini db init
-      - name: Setup extension (CKAN < 2.9)
-        if: ${{ matrix.ckan-version == '2.7' || matrix.ckan-version == '2.8' }}
-        run: |
-          paster --plugin=ckan db init -c test.ini
+      - name: Setup extension
+        run: ckan -c test.ini db init
 
       - name: Run tests
         run: pytest --ckan-ini=test.ini --cov=ckanext.resource_visibility --disable-warnings ckanext/resource_visibility/tests

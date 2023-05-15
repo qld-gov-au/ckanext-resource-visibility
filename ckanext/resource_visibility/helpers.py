@@ -15,8 +15,7 @@ def _get_helpers():
         get_package_dict,
         get_select_field_options,
         has_user_permission_for_org,
-        get_assessment_result_help_url,
-        is_ckan_29
+        get_assessment_result_help_url
     )
 
     return {
@@ -76,11 +75,3 @@ def has_user_permission_for_org(org_id, user_obj, permission):
 
 def get_assessment_result_help_url():
     return tk.config.get(const.PRIVACY_ASSESS_RESULT_LINK)
-
-
-def is_ckan_29():
-    """
-    Returns True if using CKAN 2.9+, with Flask and Webassets.
-    Returns False if those are not present.
-    """
-    return tk.check_ckan_version(min_version='2.9.0')

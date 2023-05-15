@@ -2,38 +2,17 @@
 
 # ckanext-resource-visibility
 
-**TODO:** Put a description of your extension here:  What does it do? What features does it have? Consider including some screenshots or embedding a video!
-
-
 ## Requirements
-
-**TODO:** For example, you might want to mention here which versions of CKAN this
-extension works with.
-
-If your extension works across different versions you can add the following table:
 
 Compatibility with core CKAN versions:
 
 | CKAN version    | Compatible?   |
 | --------------- | ------------- |
-| 2.6 and earlier | not tested    |
-| 2.7             | not tested    |
-| 2.8             | not tested    |
-| 2.9             | not tested    |
-
-Suggested values:
-
-* "yes"
-* "not tested" - I can't think of a reason why it wouldn't work
-* "not yet" - there is an intention to get it working
-* "no"
+| 2.8 and earlier | no            |
+| 2.9             | yes           |
 
 
 ## Installation
-
-**TODO:** Add any additional install steps to the list below.
-   For example installing any non-Python dependencies or adding any required
-   config settings.
 
 To install ckanext-resource-visibility:
 
@@ -46,7 +25,7 @@ To install ckanext-resource-visibility:
     git clone https://github.com//ckanext-resource-visibility.git
     cd ckanext-resource-visibility
     pip install -e .
-	pip install -r requirements.txt
+    pip install -r requirements.txt
 
 3. Add `resource-visibility` to the `ckan.plugins` setting in your CKAN
    config file (by default the config file is located at
@@ -59,13 +38,9 @@ To install ckanext-resource-visibility:
 
 ## Config settings
 
-None at present
-
-**TODO:** Document any optional config settings here. For example:
-
-	# The minimum number of hours to wait before re-checking a resource
-	# (optional, default: 24).
-	ckanext.resource_visibility.some_setting = some_default_value
+    # The minimum number of hours to wait before re-checking a resource
+    # (optional, default: 24).
+    ckanext.resource_visibility.some_setting = some_default_value
 
 
 ## Developer installation

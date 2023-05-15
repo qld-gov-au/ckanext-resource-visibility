@@ -46,6 +46,9 @@ class ResourceVisibilityPlugin(p.SingletonPlugin):
     # IResourceController
 
     def before_update(self, context, current_resource, updated_resource):
+        return self.before_resource_update(context, current_resource, updated_resource)
+
+    def before_resource_update(self, context, current_resource, updated_resource):
         old_assessment_result = current_resource.get(const.FIELD_ASSESS_RESULT)
         new_assessment_result = updated_resource.get(const.FIELD_ASSESS_RESULT)
 

@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 import ckan.plugins as p
 import ckan.plugins.toolkit as tk
 
@@ -11,9 +13,7 @@ class ResourceVisibilityPlugin(p.SingletonPlugin):
     p.implements(p.ITemplateHelpers)
     p.implements(p.IValidators)
     p.implements(p.IActions)
-    # Ensure 2.8 does not crash, just disable cli options
-    if helpers.is_ckan_29():
-        p.implements(p.IClick)
+    p.implements(p.IClick)
     p.implements(p.IResourceController, inherit=True)
 
     # IConfigurer
@@ -46,6 +46,9 @@ class ResourceVisibilityPlugin(p.SingletonPlugin):
     # IResourceController
 
     def before_update(self, context, current_resource, updated_resource):
+        return self.before_resource_update(context, current_resource, updated_resource)
+
+    def before_resource_update(self, context, current_resource, updated_resource):
         old_assessment_result = current_resource.get(const.FIELD_ASSESS_RESULT)
         new_assessment_result = updated_resource.get(const.FIELD_ASSESS_RESULT)
 

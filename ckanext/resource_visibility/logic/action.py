@@ -18,10 +18,7 @@ def package_show(next_func, context, data_dict):
 
     data_dict = next_func(context, data_dict)
 
-    data_dict['resources'] = [
-        resource for resource in data_dict['resources']
-        if is_resource_visible(context, resource, data_dict)
-    ]
+    data_dict['resources'] = remove_hidden_resources(context, data_dict)
     data_dict['num_resources'] = len(data_dict['resources'])
 
     # set a default value to 'NO', probably of some old datasets
@@ -39,6 +36,18 @@ def package_show(next_func, context, data_dict):
     return data_dict
 
 
+def remove_hidden_resources(context, data_dict):
+    for res in data_dict["resources"]:
+        if _is_resource_visible(res, data_dict):
+            continue
+
+        res["qld_hidden"] = True
+
+    return [
+        resource for resource in data_dict['resources']
+        if is_resource_visible(context, resource, data_dict)
+    ]
+
 def is_resource_visible(context, res_dict, pkg_dict):
     """Check if resource visible for a specific user"""
 
@@ -48,6 +57,10 @@ def is_resource_visible(context, res_dict, pkg_dict):
     if user_is_editor_or_admin(context, pkg_dict):
         return True
 
+    return _is_resource_visible(res_dict, pkg_dict)
+
+
+def _is_resource_visible(res_dict, pkg_dict):
     resource_visible = res_dict.get(c.FIELD_RESOURCE_VISIBLE)
     gov_acknowledgement = res_dict.get(c.FIELD_GOVERNANCE_ACKN)
     request_privacy_assess = res_dict.get(c.FIELD_REQUEST_ASSESS)

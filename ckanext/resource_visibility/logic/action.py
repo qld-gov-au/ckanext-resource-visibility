@@ -48,6 +48,7 @@ def remove_hidden_resources(context, data_dict):
         if is_resource_visible(context, resource, data_dict)
     ]
 
+
 def is_resource_visible(context, res_dict, pkg_dict):
     """Check if resource visible for a specific user"""
 

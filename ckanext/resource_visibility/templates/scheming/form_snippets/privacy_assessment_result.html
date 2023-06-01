@@ -26,7 +26,7 @@
         <div class="info-block">
             <i class="fa fa-info-circle"></i>
             <span>
-                {{ _("Refer to the linked Privacy Assessment Report for details of the assessment.") }}
+                Refer to the linked <a href="{{ h.resource_visibility_get_assessment_result_help_url() or '#' }}" target="_blank">Privacy Assessment Report</a> for details of the assessment.
             </span>
         </div>
     {% endcall %}

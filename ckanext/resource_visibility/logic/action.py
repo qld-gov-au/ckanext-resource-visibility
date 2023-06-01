@@ -73,10 +73,7 @@ def _is_resource_visible(res_dict, pkg_dict):
         if request_privacy_assess == c.NO or not request_privacy_assess:
             return True
         if request_privacy_assess == c.YES:
-            if de_identified_data == c.NO:
-                return True
-            elif de_identified_data == c.YES:
-                return False
+            return False
     elif gov_acknowledgement == c.NO:
         return de_identified_data == c.NO
 

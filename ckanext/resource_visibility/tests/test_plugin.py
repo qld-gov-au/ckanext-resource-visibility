@@ -47,8 +47,11 @@ To temporary patch the CKAN configuration for the duration of a test you can use
     def test_some_action():
         pass
 """
-import ckanext.resource_visibility.plugin as plugin  # noqa
+from ckanext.resource_visibility import plugin
 
 
 def test_plugin():
-    pass
+    test_plugin = plugin.ResourceVisibilityPlugin()
+    test_plugin.get_helpers()
+    test_plugin.get_actions()
+    test_plugin.get_commands()

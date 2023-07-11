@@ -84,5 +84,6 @@ jobs:
       - name: Setup extension
         run: ckan -c test.ini db init
 
-      - name: Run tests
-        run: pytest --ckan-ini=test.ini --cov=ckanext.resource_visibility --disable-warnings ckanext/resource_visibility/tests
+      # Currently no unit tests exist
+      #- name: Run tests
+      #  run: pytest --ckan-ini=test.ini --cov=ckanext.resource_visibility --disable-warnings ckanext/resource_visibility/tests

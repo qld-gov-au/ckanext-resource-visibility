@@ -51,4 +51,7 @@ from ckanext.resource_visibility import plugin
 
 
 def test_plugin():
-    sanity_test = plugin.ResourceVisibilityPlugin()
+    test_plugin = plugin.ResourceVisibilityPlugin()
+    test_plugin.get_helpers()
+    test_plugin.get_actions()
+    test_plugin.get_commands()

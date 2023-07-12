@@ -10,3 +10,4 @@ pytest-cov
 selenium<4.10
 six>=1.13.0
 
+-e git+https://github.com/ckan/ckanext-scheming.git@release-3.0.0#egg=ckanext-scheming

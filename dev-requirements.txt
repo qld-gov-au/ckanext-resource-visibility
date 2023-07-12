@@ -1,2 +1,12 @@
+behaving==3.1.5
+Appium-Python-Client==2.10.1
+ckanapi==4.3
+factory-boy
+Faker
+flake8==6.0.0
+mock
 pytest-ckan
 pytest-cov
+selenium<4.10
+six>=1.13.0
+

@@ -15,7 +15,7 @@ Feature: Re-identification risk governance acknowledgement or Resource visibilit
         Then I should see "Package with invisible resource"
         And I should not see "invisible-resource"
 
-    Scenario: As an unprivileged user, I cannot see resources with privacy assessment requested and risk governance completed 
+    Scenario: As an unprivileged user, I cannot see resources with privacy assessment requested and risk governance completed
         Given "TestOrgEditor" as the persona
         When I log in
         And I create a dataset and resource with key-value parameters "name=package-with-assessed-resource::notes=Package with assessed resource::de_identified_data=NO::private=False" and "name=resource-for-assessment::request_privacy_assessment=YES::governance_acknowledgement=YES::resource_visible=TRUE"
@@ -78,6 +78,8 @@ Feature: Re-identification risk governance acknowledgement or Resource visibilit
         And I press "Manage"
         Then I should not see an element with xpath "//label[@for="field-request_privacy_assessment"]//*[@class="control-required"]"
         And I should see an element with xpath "//select[@id="field-request_privacy_assessment"]//option[@value="" or @value="YES" or @value="NO"]"
+        And I should see "Privacy risk assessment prior to public release might assist the publishing decision-making process"
+        And I should see an element with xpath "//a[contains(@href, 'download') and contains(string(), 'Privacy assessment guidance')]"
 
         When I press the element with xpath "//button[string()='Update Resource']"
         Then I should see an element with xpath "//th[string()='Request privacy assessment']/following-sibling::td[not(string())]"

@@ -84,7 +84,8 @@
                         "label": "YES"
                     }
                 ],
-                "help_text": "Where the dataset contains de-identified data, selecting ‘YES’ will hide this resource, pending a privacy assessment. Assessments will not be completed where the dataset does not contain de-identified data. Select ‘NO’ where the dataset does not contain de-identified data or where a privacy assessment is not required."
+                "help_text": "Privacy risk assessment prior to public release might assist the publishing decision-making process. Refer to the <a href='https://www.data.qld.gov.au/dataset/8dffc07c-be62-48f5-b70a-39ac0e68eb47/resource/18bd8e35-1877-4b1a-bbfe-41d37122f8d1/download'>Privacy assessment guidance</a> for further information. A ‘YES’ value will hide this resource from the public and users within other organisations.",
+                "help_allow_html": true
             }
         },
         {

@@ -13,3 +13,4 @@ six>=1.13.0
 splinter>=0.13.0,<0.17
 
 -e git+https://github.com/ckan/ckanext-scheming.git@release-3.0.0#egg=ckanext-scheming
+zipp>=3.19.1 # not directly required, pinned by Snyk to avoid a vulnerability

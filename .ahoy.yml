@@ -138,7 +138,8 @@ commands:
   test-unit:
     usage: Run unit tests.
     cmd: |
-      ahoy cli 'pytest --ckan-ini=${CKAN_INI} --cov=ckanext $APP_DIR/ckanext' || \
+      ahoy title 'Run unit tests'
+      ahoy cli 'pytest --ckan-ini=${CKAN_INI} --cov=ckanext "${APP_DIR}"/ckanext --junit-xml=test/junit/results.xml' || \
       [ "${ALLOW_UNIT_FAIL:-0}" -eq 1 ]
 
   test-bdd:
@@ -150,16 +151,16 @@ commands:
       sleep 5 &&
       if [ "$BEHAVE_TAG" = "" ]; then
         # no tag specified, probably running locally
-        (ahoy cli "behave -k ${*:-test/features} --tags=smoke" \
-         && ahoy cli "behave -k ${*:-test/features} --tags=-smoke" \
+        (ahoy cli "behave --junit -k ${*:-test/features} --tags=smoke --junit-directory=test/junit/" \
+         && ahoy cli "behave -k ${*:-test/features} --tags=-smoke --junit-directory=test/junit/" \
         ) || [ "${ALLOW_BDD_FAIL:-0}" -eq 1 ]
       elif [ "$BEHAVE_TAG" = "authenticated" ]; then
         # run any tests that don't have a specific tag
-        ahoy cli "behave -k ${*:-test/features} --tags=-unauthenticated --tags=-smoke" \
+        ahoy cli "behave --junit -k ${*:-test/features} --tags=-unauthenticated --tags=-smoke --junit-directory=test/junit/" \
           || [ "${ALLOW_BDD_FAIL:-0}" -eq 1 ]
       else
         # run tests with the specified tag
-        ahoy cli "behave -k ${*:-test/features} --tags=$BEHAVE_TAG" \
+        ahoy cli "behave --junit -k ${*:-test/features} --tags=$BEHAVE_TAG --junit-directory=test/junit/" \
           || [ "${ALLOW_BDD_FAIL:-0}" -eq 1 ]
       fi
       ahoy stop-mailmock

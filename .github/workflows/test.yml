@@ -45,30 +45,43 @@ jobs:
         timeout-minutes: 2
 
       - name: Build
+        continue-on-error: ${{ matrix.experimental }}
         run: bin/build.sh
         timeout-minutes: 15
 
       - name: Unit test
+        continue-on-error: ${{ matrix.experimental }}
         run: bin/test.sh
         timeout-minutes: 10
 
       - name: Scenario test
+        continue-on-error: ${{ matrix.experimental }}
         run: bin/test-bdd.sh
         timeout-minutes: 30
 
       - name: Retrieve logs
-        if: failure()
+        if: always()
         run: ahoy logs
-        timeout-minutes: 5
-
-      - name: Retrieve screenshots
-        if: failure()
-        run: bin/process-artifacts.sh
+        continue-on-error: ${{ matrix.experimental }}
         timeout-minutes: 1
 
+      - name: Retrieve results
+        if: always()
+        run: bin/process-artifacts.sh
+        continue-on-error: ${{ matrix.experimental }}
+        timeout-minutes: 1
+
+      - name: Test Summary
+        uses: test-summary/action@v2
+        continue-on-error: ${{ matrix.experimental }}
+        with:
+          paths: "/tmp/artifacts/junit/*.xml"
+        if: always()
+
       - name: Upload screenshots
-        if: failure()
-        uses: actions/upload-artifact@v3
+        if: always()
+        uses: actions/upload-artifact@v4
+        continue-on-error: ${{ matrix.experimental }}
         with:
           name: CKAN ${{ matrix.ckan-version }} screenshots
           path: /tmp/artifacts/behave/screenshots

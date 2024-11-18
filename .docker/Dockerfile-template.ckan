@@ -12,8 +12,6 @@ ENV PYTHON={PYTHON}
 
 WORKDIR "${APP_DIR}"
 
-# Install CKAN.
-
 COPY .docker/test.ini $CKAN_INI
 
 COPY . "${APP_DIR}"/
@@ -29,6 +27,8 @@ RUN wget -O - https://github.com/jwilder/dockerize/releases/download/${DOCKERIZE
         | tar -C /usr/local/bin -xzvf -
 
 RUN which ps || apt-get install -y procps
+
+# Install CKAN.
 
 RUN cd $SRC_DIR/ckan \
     && git config --global --add safe.directory "$SRC_DIR/ckan" \

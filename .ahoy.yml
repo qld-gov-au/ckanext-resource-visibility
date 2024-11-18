@@ -148,11 +148,11 @@ commands:
       ahoy title 'Run scenario tests'
       ahoy cli "rm -f test/screenshots/*"
       ahoy start-mailmock &
-      sleep 5 &&
+      sleep 5
       if [ "$BEHAVE_TAG" = "" ]; then
         # no tag specified, probably running locally
         (ahoy cli "behave --junit -k ${*:-test/features} --tags=smoke --junit-directory=test/junit/" \
-         && ahoy cli "behave -k ${*:-test/features} --tags=-smoke --junit-directory=test/junit/" \
+         && ahoy cli "behave --junit -k ${*:-test/features} --tags=-smoke --junit-directory=test/junit/"
         ) || [ "${ALLOW_BDD_FAIL:-0}" -eq 1 ]
       elif [ "$BEHAVE_TAG" = "authenticated" ]; then
         # run any tests that don't have a specific tag

@@ -2,15 +2,14 @@
 ##
 # Create some example content for extension BDD tests.
 #
-set -e
-set -x
+set -ex
 
 CKAN_ACTION_URL=${CKAN_SITE_URL}api/action
 CKAN_USER_NAME="${CKAN_USER_NAME:-admin}"
 CKAN_DISPLAY_NAME="${CKAN_DISPLAY_NAME:-Administrator}"
 CKAN_USER_EMAIL="${CKAN_USER_EMAIL:-admin@localhost}"
 
-. ${APP_DIR}/bin/activate
+. "${APP_DIR}"/bin/activate
 
 add_user_if_needed () {
     echo "Adding user '$2' ($1) with email address [$3]"

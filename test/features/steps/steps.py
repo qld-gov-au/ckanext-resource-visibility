@@ -32,7 +32,7 @@ def debug_screenshot(context):
     """
     if context.persona and context.persona.get('debug') == 'True':
         context.execute_steps(u"""
-            Then I take a screenshot
+            When I take a screenshot
         """)
 
 
@@ -64,7 +64,7 @@ def log_in(context):
 @when(u'I expand the browser height')
 def expand_height(context):
     # Work around x=null bug in Selenium set_window_size
-    context.browser.driver.set_window_rect(x=0, y=0, width=1024, height=4096)
+    context.browser.driver.set_window_rect(x=0, y=0, width=1024, height=3072)
 
 
 @when(u'I log in directly')
@@ -75,10 +75,11 @@ def log_in_directly(context):
     :return:
     """
 
-    assert context.persona, "A persona is required to log in, found [{}] in context. Have you configured the personas in before_scenario?".format(context.persona)
+    assert context.persona, "A persona is required to log in, found [{}] in context." \
+        " Have you configured the personas in before_scenario?".format(context.persona)
     context.execute_steps(u"""
         When I attempt to log in with password "$password"
-        Then I should see an element with xpath "//a[@title='Log out']"
+        Then I should see an element with xpath "//*[@title='Log out' or @data-bs-title='Log out']/i[contains(@class, 'fa-sign-out')]"
     """)
 
 
@@ -125,10 +126,18 @@ def clear_url(context):
 
 @when(u'I confirm the dialog containing "{text}" if present')
 def confirm_dialog_if_present(context, text):
-    if context.browser.is_text_present(text):
-        context.execute_steps(u"""
-            When I press the element with xpath "//*[contains(@class, 'modal-dialog')]//button[contains(@class, 'btn-primary')]"
-        """)
+    dialog_xpath = "//*[contains(@class, 'modal-dialog') and contains(string(), '{0}')]".format(text)
+    if context.browser.is_element_present_by_xpath(dialog_xpath):
+        parent_xpath = dialog_xpath
+    elif context.browser.is_text_present(text):
+        parent_xpath = "//div[contains(string(), '{0}')]/..".format(text)
+    else:
+        return
+    button_xpath = parent_xpath + "//button[contains(@class, 'btn-primary')]"
+    context.execute_steps(u"""
+        When I take a debugging screenshot
+        And I press the element with xpath "{0}"
+    """.format(button_xpath))
 
 
 @when(u'I confirm dataset deletion')
@@ -159,9 +168,14 @@ def go_to_new_resource_form(context, name):
         """)
     else:
         # Existing dataset, browse to the resource form
+        if context.browser.is_element_present_by_xpath(
+                "//a[contains(string(), 'Resources') and contains(@href, '/dataset/resources/')]"):
+            context.execute_steps(u"""
+                When I press "Resources"
+            """)
         context.execute_steps(u"""
-            When I press "Resources"
-            And I press "Add new resource"
+            When I press "Add new resource"
+            And I take a debugging screenshot
         """)
 
 
@@ -171,6 +185,7 @@ def title_random_text(context):
     context.execute_steps(u"""
         When I fill in "title" with "Test Title {0}"
         And I fill in "name" with "test-title-{0}" if present
+        And I set "last_generated_title" to "Test Title {0}"
         And I set "last_generated_name" to "test-title-{0}"
     """.format(uuid.uuid4()))
 
@@ -186,6 +201,7 @@ def go_to_dataset_page(context):
 def go_to_dataset(context, name):
     context.execute_steps(u"""
         When I visit "/dataset/{0}"
+        And I take a debugging screenshot
     """.format(name))
 
 
@@ -213,9 +229,11 @@ def select_licence(context, licence_id):
 
 @when(u'I enter the resource URL "{url}"')
 def enter_resource_url(context, url):
-    context.execute_steps(u"""
-        When I execute the script "$('#resource-edit [name=url]').val('{0}')"
-    """.format(url))
+    if url != "default":
+        context.execute_steps(u"""
+            When I clear the URL field
+            When I execute the script "$('#resource-edit [name=url]').val('{0}')"
+        """.format(url))
 
 
 @when(u'I fill in default dataset fields')
@@ -251,7 +269,7 @@ def fill_in_default_link_resource_fields(context):
 @when(u'I upload "{file_name}" of type "{file_format}" to resource')
 def upload_file_to_resource(context, file_name, file_format):
     context.execute_steps(u"""
-        When I execute the script "button = document.getElementById('resource-upload-button'); if (button) button.click();"
+        When I execute the script "$('#resource-upload-button').trigger('click');"
         And I attach the file "{file_name}" to "upload"
         # Don't quote the injected string since it can have trailing spaces
         And I execute the script "document.getElementById('field-format').value='{file_format}'"
@@ -365,11 +383,16 @@ def _create_dataset_from_params(context, params):
         When I visit "/dataset/new"
         And I fill in default dataset fields
     """)
+    if 'private' not in params:
+        params = params + "::private=False"
     for key, value in _parse_params(params):
         if key == "name":
+            # 'name' doesn't need special input, but we want to remember it
             context.execute_steps(u"""
                 When I set "last_generated_name" to "{0}"
             """.format(value))
+
+        # Don't use elif here, we still want to type 'name' as usual
         if key == "owner_org":
             # Owner org uses UUIDs as its values, so we need to rely on displayed text
             context.execute_steps(u"""
@@ -436,11 +459,9 @@ def create_resource_from_params(context, resource_params):
     """)
     for key, value in _parse_params(resource_params):
         if key == "url":
-            if value != "default":
-                context.execute_steps(u"""
-                    When I clear the URL field
-                    And I execute the script "$('#resource-edit [name=url]').val('{0}')"
-                """.format(value))
+            context.execute_steps(u"""
+                When I enter the resource URL "{0}"
+            """.format(value))
         elif key == "upload":
             if value == "default":
                 value = "test_game_data.csv"
@@ -489,7 +510,7 @@ def create_resource_from_params(context, resource_params):
             """.format(key, value))
     context.execute_steps(u"""
         When I take a debugging screenshot
-        And I press the element with xpath "//form[contains(@class, 'resource-form')]//button[contains(@class, 'btn-primary')]"
+        And I press the element with xpath "//form[contains(@data-module, 'resource-form')]//button[contains(@class, 'btn-primary')]"
         And I take a debugging screenshot
     """)
 
@@ -510,12 +531,8 @@ def should_receive_base64_email_containing_texts(context, address, text, text2):
         payload_bytes = quopri.decodestring(payload)
         if len(payload_bytes) > 0:
             payload_bytes += b'='  # do fix the padding error issue
-        if six.PY2:
-            decoded_payload = payload_bytes.decode('base64')
-        else:
-            import base64
-            decoded_payload = six.ensure_text(base64.b64decode(six.ensure_binary(payload_bytes)))
-        print('decoded_payload: ', decoded_payload)
+        decoded_payload = six.ensure_text(base64.b64decode(six.ensure_binary(payload_bytes)))
+        print('Searching for', text, ' and ', text2, ' in decoded_payload: ', decoded_payload)
         return text in decoded_payload and (not text2 or text2 in decoded_payload)
 
     assert context.mail.user_messages(address, filter_contents)
@@ -531,7 +548,7 @@ def go_to_admin_config(context):
 @when(u'I log out')
 def log_out(context):
     context.execute_steps(u"""
-        When I visit "/user/_logout"
+        When I press the element with xpath "//*[@title='Log out' or @data-bs-title='Log out']"
         Then I should see "Log in"
     """)
 
@@ -585,137 +602,3 @@ def click_link_in_email(context, address):
     url = links[0].rstrip(':')
 
     context.browser.visit(url)
-
-
-# ckanext-ytp-comments
-
-
-@when(u'I go to dataset "{name}" comments')
-def go_to_dataset_comments(context, name):
-    context.execute_steps(u"""
-        When I go to dataset "%s"
-        And I press "Comments"
-    """ % (name))
-
-
-@then(u'I should see the add comment form')
-def comment_form_visible(context):
-    context.execute_steps(u"""
-        Then I should see an element with xpath "//textarea[@name='comment']"
-    """)
-
-
-@then(u'I should not see the add comment form')
-def comment_form_not_visible(context):
-    context.execute_steps(u"""
-        Then I should not see an element with xpath "//input[@name='subject']"
-        And I should not see an element with xpath "//textarea[@name='comment']"
-    """)
-
-
-@when(u'I submit a comment with subject "{subject}" and comment "{comment}"')
-def submit_comment_with_subject_and_comment(context, subject, comment):
-    """
-    There can be multiple comment forms per page (add, edit, reply) each with fields named "subject" and "comment"
-    This step overcomes a limitation of the fill() method which only fills a form field by name
-    :param context:
-    :param subject:
-    :param comment:
-    :return:
-    """
-    context.browser.execute_script("""
-        document.querySelector('form#comment_form input[name="subject"]').value = '%s';
-        """ % subject)
-    context.browser.execute_script("""
-        document.querySelector('form#comment_form textarea[name="comment"]').value = '%s';
-        """ % comment)
-    context.browser.execute_script("""
-        document.querySelector('form#comment_form .form-actions input[type="submit"]').click();
-        """)
-
-
-@when(u'I submit a reply with comment "{comment}"')
-def submit_reply_with_comment(context, comment):
-    """
-    There can be multiple comment forms per page (add, edit, reply) each with fields named "subject" and "comment"
-    This step overcomes a limitation of the fill() method which only fills a form field by name
-    :param context:
-    :param comment:
-    :return:
-    """
-    context.browser.execute_script("""
-        document.querySelector('.comment-wrapper form textarea[name="comment"]').value = '%s';
-        """ % comment)
-    context.browser.execute_script("""
-        document.querySelector('.comment-wrapper form .form-actions input[type="submit"]').click();
-        """)
-
-
-# ckanext-qgov
-
-
-@when(u'I lock my account')
-def lock_account(context):
-    context.execute_steps(u"""
-        When I visit "/user/login"
-    """)
-    for x in range(11):
-        context.execute_steps(u"""
-            When I attempt to log in with password "incorrect password"
-        """)
-
-
-# ckanext-datarequests
-
-
-@when(u'I go to the data requests page containing "{keyword}"')
-def go_to_datarequest_page_search(context, keyword):
-    context.execute_steps(u"""
-        When I visit "/datarequest?q={0}"
-    """.format(keyword))
-
-
-@when(u'I go to the data requests page')
-def go_to_datarequest_page(context):
-    context.execute_steps(u"""
-        When I visit "/datarequest"
-    """)
-
-
-@when(u'I go to data request "{subject}"')
-def go_to_data_request(context, subject):
-    context.execute_steps(u"""
-        When I go to the data requests page containing "{0}"
-        And I click the link with text "{0}"
-        Then I should see "{0}" within 5 seconds
-    """.format(subject))
-
-
-@when(u'I create a datarequest')
-def create_datarequest(context):
-    assert context.persona
-    context.execute_steps(u"""
-        When I go to the data requests page
-        And I press "Add data request"
-        And I fill in title with random text
-        And I fill in "description" with "Test description"
-        And I press the element with xpath "//button[contains(@class, 'btn-primary')]"
-    """)
-
-
-@when(u'I go to data request "{subject}" comments')
-def go_to_data_request_comments(context, subject):
-    context.execute_steps(u"""
-        When I go to data request "%s"
-        And I press "Comments"
-    """ % (subject))
-
-
-# ckanext-report
-
-
-@when(u'I go to my reports page')
-def go_to_reporting_page(context):
-    context.execute_steps(u"""
-        When I visit "/dashboard/reporting"
-    """)

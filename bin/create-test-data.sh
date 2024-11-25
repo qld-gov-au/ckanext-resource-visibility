@@ -9,23 +9,23 @@ CKAN_USER_NAME="${CKAN_USER_NAME:-admin}"
 CKAN_DISPLAY_NAME="${CKAN_DISPLAY_NAME:-Administrator}"
 CKAN_USER_EMAIL="${CKAN_USER_EMAIL:-admin@localhost}"
 
-. "${APP_DIR}"/bin/activate
+. `dirname $0`/activate
 
 add_user_if_needed () {
     echo "Adding user '$2' ($1) with email address [$3]"
-    ckan_cli user show "$1" | grep "$1" || ckan_cli user add "$1"\
+    ckan -c $CKAN_INI user show "$1" | grep "$1" || ckan -c $CKAN_INI user add "$1"\
         fullname="$2"\
         email="$3"\
         password="${4:-Password123!}"
 }
 
 add_user_if_needed "$CKAN_USER_NAME" "$CKAN_DISPLAY_NAME" "$CKAN_USER_EMAIL"
-ckan_cli sysadmin add "${CKAN_USER_NAME}"
+ckan -c $CKAN_INI sysadmin add "${CKAN_USER_NAME}"
 
-API_KEY=$(ckan_cli user show "${CKAN_USER_NAME}" | tr -d '\n' | sed -r 's/^(.*)apikey=(\S*)(.*)/\2/')
+API_KEY=$(ckan -c $CKAN_INI user show "${CKAN_USER_NAME}" | tr -d '\n' | sed -r 's/^(.*)apikey=(\S*)(.*)/\2/')
 if [ "$API_KEY" = "None" ]; then
     echo "No API Key found on ${CKAN_USER_NAME}, generating API Token..."
-    API_KEY=$(ckan_cli user token add "${CKAN_USER_NAME}" test_setup |tail -1 | tr -d '[:space:]')
+    API_KEY=$(ckan -c $CKAN_INI user token add "${CKAN_USER_NAME}" test_setup |tail -1 | tr -d '[:space:]')
 fi
 
 ##
@@ -52,7 +52,7 @@ TEST_ORG=$( \
         "description": "Organisation for testing issues"}' organization_create
 )
 
-TEST_ORG_ID=$(echo $TEST_ORG | $PYTHON "${APP_DIR}"/bin/extract-id.py)
+TEST_ORG_ID=$(echo $TEST_ORG | $PYTHON `dirname $0`/extract-id.py)
 
 echo "Assigning test users to '${TEST_ORG_TITLE}' organisation (${TEST_ORG_ID}):"
 
@@ -66,4 +66,4 @@ api_call '{"id": "'"${TEST_ORG_ID}"'", "object": "test_org_member", "object_type
 # END.
 #
 
-. "${APP_DIR}"/bin/deactivate
+. `dirname $0`/deactivate

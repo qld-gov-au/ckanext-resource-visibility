@@ -33,7 +33,7 @@ def get_package_dict(id, use_get_action=True):
 
     try:
         if use_get_action:
-            return tk.get_action('package_show')({}, {'name_or_id': id})
+            return tk.get_action('package_show')({}, {'id': id})
         else:
             pkg = model.Package.get(id)
             if pkg:

@@ -22,7 +22,11 @@ CKAN_GIT_VERSION=$CKAN_VERSION
 CKAN_GIT_ORG=ckan
 SOLR_VERSION=9
 
-if [ "$CKAN_VERSION" = "2.11" ] && [ "$CKAN_TYPE" = "custom" ]; then
+if [ "$CKAN_VERSION" = "2.12" ]; then
+    # Pin to a working version of 2.12
+    # TODO Update after https://github.com/ckan/ckan/issues/9417 is fixed
+    CKAN_GIT_VERSION=6a75534af2d50f506820e252c7f0c5d5c65a6b72
+elif [ "$CKAN_VERSION" = "2.11" ] && [ "$CKAN_TYPE" = "custom" ]; then
     CKAN_GIT_VERSION=ckan-2.11.5-qgov.2
 elif [ "$CKAN_VERSION" = "2.10" ]; then
     if [ "$CKAN_TYPE" = "custom" ]; then

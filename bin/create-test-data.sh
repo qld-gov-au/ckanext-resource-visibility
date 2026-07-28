@@ -52,7 +52,7 @@ TEST_ORG=$( \
         "description": "Organisation for testing issues"}' organization_create
 )
 
-TEST_ORG_ID=$(echo $TEST_ORG | $PYTHON `dirname $0`/extract-id.py)
+TEST_ORG_ID=$(echo $TEST_ORG | $PYTHON "${APP_DIR}"/bin/extract-id.py)
 
 echo "Assigning test users to '${TEST_ORG_TITLE}' organisation (${TEST_ORG_ID}):"
 

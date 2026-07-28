@@ -7,9 +7,10 @@ set -ex
 # Process Docker Compose configuration. This is used to avoid multiple
 # docker-compose.yml files.
 # Remove lines containing '###'.
-sed -i -e "/###/d" docker-compose.yml
 # Uncomment lines containing '##'.
-sed -i -e "s/##//" docker-compose.yml
+sed -e "/###/d" docker-compose-template.yml | \
+sed -e "s/##//" \
+> docker-compose.yml
 
 # Pull the latest images.
 ahoy pull
@@ -21,11 +22,11 @@ CKAN_GIT_VERSION=$CKAN_VERSION
 CKAN_GIT_ORG=ckan
 SOLR_VERSION=9
 
-if [ "$CKAN_VERSION" = "2.11" ]; then
-    CKAN_GIT_VERSION=ckan-2.11.1
+if [ "$CKAN_VERSION" = "2.11" ] && [ "$CKAN_TYPE" = "custom" ]; then
+    CKAN_GIT_VERSION=ckan-2.11.5-qgov.2
 elif [ "$CKAN_VERSION" = "2.10" ]; then
     if [ "$CKAN_TYPE" = "custom" ]; then
-      CKAN_GIT_VERSION=ckan-2.10.5-qgov.5
+      CKAN_GIT_VERSION=ckan-2.10.7-qgov.2
       CKAN_GIT_ORG=qld-gov-au
     fi
     SOLR_VERSION=8

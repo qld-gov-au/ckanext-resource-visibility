@@ -22,10 +22,6 @@ CKAN_GIT_VERSION=$CKAN_VERSION
 CKAN_GIT_ORG=ckan
 SOLR_VERSION=9
 
-if [ "$CKAN_VERSION" = "2.10" ] || [ "$CKAN_VERSION" = "2.9" ]; then
-    SOLR_VERSION=8
-fi
-
 sed "s|{CKAN_VERSION}|$CKAN_VERSION|g" .docker/Dockerfile-template.ckan \
     | sed "s|{CKAN_GIT_VERSION}|$CKAN_GIT_VERSION|g" \
     | sed "s|{CKAN_GIT_ORG}|$CKAN_GIT_ORG|g" \

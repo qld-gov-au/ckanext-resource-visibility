@@ -31,7 +31,8 @@ RUN cd $SRC_DIR/ckan \
     && git remote set-url origin 'https://github.com/{CKAN_GIT_ORG}/ckan.git' \
     && git fetch \
     && git reset --hard && git clean -f \
-    && git checkout '{CKAN_GIT_VERSION}'
+    && git checkout '{CKAN_GIT_VERSION}' \
+    && if (git symbolic-ref -q HEAD); then git pull; fi
 
 USER "$ORIGINAL_USER"
 

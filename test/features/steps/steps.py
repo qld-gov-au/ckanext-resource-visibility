@@ -96,7 +96,7 @@ def attempt_login(context, password):
 @then(u'I should see the login form')
 def login_link_visible(context):
     context.execute_steps(u"""
-        Then I should see an element with xpath "//h1[contains(string(), 'Login')]"
+        Then I should see an element with xpath "//h1[contains(string(), 'Log')]"
     """)
 
 
@@ -240,7 +240,7 @@ def edit_dataset(context, name):
 def select_licence(context, licence_id):
     # Licence requires special interaction due to fancy JavaScript
     context.execute_steps(u"""
-        When I execute the script "$('#field-license_id').val('{0}').trigger('change')"
+        When I execute the script "element = document.getElementsByName('license_id')[0]; element.value = '{0}'; element.dispatchEvent(new Event('change'));"
     """.format(licence_id))
 
 

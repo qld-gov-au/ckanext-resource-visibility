@@ -10,6 +10,9 @@ Compatibility with core CKAN versions:
 | --------------- | ------------- |
 | 2.8 and earlier | no            |
 | 2.9             | yes           |
+| 2.10            | yes           |
+| 2.11            | yes           |
+| 2.12            | yes           |
 
 
 ## Installation
@@ -22,10 +25,13 @@ To install ckanext-resource-visibility:
 
 2. Clone the source and install it on the virtualenv
 
-    git clone https://github.com//ckanext-resource-visibility.git
-    cd ckanext-resource-visibility
-    pip install -e .
-    pip install -r requirements.txt
+       pip install ckanext-resource-visibility
+
+   or 
+
+       git clone https://github.com//ckanext-resource-visibility.git
+       cd ckanext-resource-visibility
+       pip install -e .
 
 3. Add `resource-visibility` to the `ckan.plugins` setting in your CKAN
    config file (by default the config file is located at
@@ -50,7 +56,7 @@ do:
 
     git clone https://github.com//ckanext-resource-visibility.git
     cd ckanext-resource-visibility
-    python setup.py develop
+    pip install -e '.[dev]'
     pip install -r dev-requirements.txt
 
 

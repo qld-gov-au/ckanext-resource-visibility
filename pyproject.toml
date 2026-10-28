@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 name = "ckanext-resource-visibility"
 version = "2.2.1"
 description = "CKAN Extension resource visibility"
-requires-python = ">=3.7"
+requires-python = ">=3.9"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",

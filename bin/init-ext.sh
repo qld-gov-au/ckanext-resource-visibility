@@ -44,10 +44,13 @@ install_requirements () {
 if [ "$CKAN_VERSION" = "2.9" ]; then
     pip install "setuptools>=44.1.0,<71"
 fi
-install_requirements . dev-requirements requirements-dev
+
+uv pip install --system ".[dev]"
+
 for extension in . `ls -d $SRC_DIR/ckan $SRC_DIR/ckanext-*`; do
     TOOL=uv install_requirements $extension requirements pip-requirements
 done
+# Do we need to make it editable
 pip install -e .
 installed_name=$(grep '^\s*name=' setup.py |sed "s|[^']*'\([-a-zA-Z0-9]*\)'.*|\1|")
 
